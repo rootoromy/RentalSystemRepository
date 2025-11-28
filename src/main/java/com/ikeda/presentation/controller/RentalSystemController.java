@@ -12,8 +12,12 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import com.ikeda.LoginService;
+import com.ikeda.data.ItemData;
 import com.ikeda.entity.DvdItem;
+import com.ikeda.presentation.form.MemberForm;
 import com.ikeda.repository.DvdItemRepository;
+
+import jakarta.servlet.http.HttpSession;
 
 @Controller
 public class RentalSystemController {
@@ -64,7 +68,7 @@ public class RentalSystemController {
 	private DvdItemRepository dvdItemRepository;
     @GetMapping("/")
     public String index(Model model,
-                        @RequestParam(name = "page", defaultValue = "0") int page) {
+                        @RequestParam(name = "page", defaultValue = "0") int page,HttpSession session) {
 
         int pageSize = 9; // 1ページ9件
 
@@ -73,8 +77,48 @@ public class RentalSystemController {
 
         model.addAttribute("items", items);        // 一覧（ページ情報つき）
         model.addAttribute("currentPage", page);   // 今のページ番号(0始まり)
+        
+        
+        ItemData itemData = (ItemData) session.getAttribute("itemData");
+        if (itemData == null) {
+            itemData = new ItemData();
+
+            // --- DB の値を入れたいならここで ---
+            // 今は仮データ
+            itemData.setItemName("タイトル名テスト");
+            itemData.setImageFileName("sample.jpg");
+
+            session.setAttribute("itemData", itemData);
+        }
+
+        model.addAttribute("itemData", itemData);
 
         return "index"; // 今の index.html を使う
+    }
+    
+    @GetMapping("/cart")
+    public String showCart() {
+        return "cart";  // cart.html を返す
+    }
+    
+    @GetMapping("/cartconfirm")
+    public String showCartConfirm() {
+        // templates/cartconfirm.html を表示
+        return "cartconfirm";
+    }
+    
+    @GetMapping("/form")
+    public String showForm(Model model) {
+
+        model.addAttribute("memberForm", new MemberForm());
+        return "form";
+    }
+    
+    @GetMapping("/editform")
+    public String showEditForm(Model model) {
+    	MemberForm form = new MemberForm();
+    	model.addAttribute("memberForm", form);
+        return "editForm";
     }
 	
 
