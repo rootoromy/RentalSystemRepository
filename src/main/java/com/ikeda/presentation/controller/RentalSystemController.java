@@ -47,7 +47,7 @@ public class RentalSystemController {
 		return "login"; // templates/login.html を返す
 	}
 
-/*	@PostMapping("/login")
+/*	@PostMapping("/login")//LoginController.javaに移植してます
 	public String doLogin(
 			@RequestParam String email,
 			@RequestParam String password,
@@ -62,7 +62,7 @@ public class RentalSystemController {
 			return "login";
 		}
 
-	} LoginController.javaに移植してます*/
+	} */
 	@Autowired
 	private DvdItemRepository dvdItemRepository;
     @GetMapping("/")
