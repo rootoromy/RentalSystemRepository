@@ -1,6 +1,7 @@
 package com.ikeda.service;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import com.ikeda.entity.Member;
@@ -12,7 +13,7 @@ public class RegisterService {
     @Autowired
     private MemberRepository memberRepository;
 
-   // private BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
+   private BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
 
     /**
      * 新規登録

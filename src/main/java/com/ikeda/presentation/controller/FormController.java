@@ -6,6 +6,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 
+import com.ikeda.entity.Member;
 import com.ikeda.presentation.form.MemberForm;
 import com.ikeda.service.RegisterService;
 
@@ -38,6 +39,6 @@ public class FormController {
         registerService.register(member);
         // ここで Service を呼んで DB 登録などを行う
         // memberService.register(memberForm);
-        return "redirect:/"; // 登録完了後にトップ画面へ
+        return "redirect:/index"; // 登録完了後にトップ画面へ
     }
 }

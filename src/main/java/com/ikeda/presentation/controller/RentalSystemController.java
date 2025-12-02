@@ -10,11 +10,11 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
-import com.ikeda.LoginService;
 import com.ikeda.data.ItemData;
 import com.ikeda.entity.DvdItem;
 import com.ikeda.presentation.form.MemberForm;
 import com.ikeda.repository.DvdItemRepository;
+import com.ikeda.service.LoginService;
 
 import jakarta.servlet.http.HttpSession;
 
@@ -62,7 +62,7 @@ public class RentalSystemController {
 			return "login";
 		}
 
-	}*/
+	} LoginController.javaに移植してます*/
 	@Autowired
 	private DvdItemRepository dvdItemRepository;
     @GetMapping("/")

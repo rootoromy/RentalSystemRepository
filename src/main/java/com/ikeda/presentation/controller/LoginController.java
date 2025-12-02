@@ -7,8 +7,10 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
-import com.ikeda.LoginService;
 import com.ikeda.presentation.form.LoginForm;
+import com.ikeda.service.LoginService;
+
+import jakarta.servlet.http.HttpSession;
 
 @Controller
 public class LoginController {
@@ -27,16 +29,25 @@ public class LoginController {
 	public String doLogin(
 			@RequestParam String email,
 			@RequestParam String password,
-			Model model) {
+			Model model,HttpSession session) {
 
 		boolean result = loginService.loginCheck(email, password);
 
+		
 		if (result) {
-			return "redirect:/home"; // ログイン成功
+			session.setAttribute("loginUser", email);
+			return "redirect:/index"; // ログイン成功時：トップページに遷移する
 		} else {
 			model.addAttribute("error", "メールアドレスまたはパスワードが違います");
-			return "login";
+			return "login";//ログイン失敗時：ログインページに遷移する
 		}
+		
 
 	}
+	@GetMapping("/logout")
+	public String logout(HttpSession session) {
+	    session.invalidate(); // セッションを完全に破棄
+	    return "redirect:/";  // トップページへ戻る
+	}
+
 }
