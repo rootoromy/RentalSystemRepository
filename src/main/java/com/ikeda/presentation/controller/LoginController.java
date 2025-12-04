@@ -35,7 +35,7 @@ public class LoginController {
 
 		
 		if (result) {
-			session.setAttribute("loginUser", email);
+			session.setAttribute("loginUser", member);
 			return "redirect:/index"; // ログイン成功時：トップページに遷移する
 		} else {
 			model.addAttribute("error", "メールアドレスまたはパスワードが違います");

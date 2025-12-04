@@ -1,0 +1,361 @@
+<!doctype html>
+<html xmlns:th="http://www.thymeleaf.org" lang="ja" data-bs-theme="auto">
+
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<meta name="description" content="">
+	<link rel="icon" type="image/svg+xml" href="/img/favicon.png">
+	<title>注文管理 - 管理者ページ</title>
+
+	<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+	<link href="/css/bootstrap.min.css" rel="stylesheet">
+	<link href="/css/normal.css" rel="stylesheet">
+</head>
+
+<body>
+	<header data-bs-theme="dark">
+		<div class="navbar navbar-dark bg-warning shadow-sm">
+			<div class="container">
+				<a href="/admin" class="navbar-brand d-flex align-items-center">
+					<img src="/img/icon_white.png" alt="カメラのアイコン" style="width: 25px; margin-right: 5px;">
+					<strong>管理者ページ - 注文管理</strong>
+				</a>
+				<div class="d-flex">
+					<a href="/admin" class="btn btn-outline-dark btn-sm me-2">ダッシュボード</a>
+					<a href="/admin/logout" class="btn btn-outline-dark btn-sm">ログアウト</a>
+				</div>
+			</div>
+		</div>
+	</header>
+
+	<main>
+		<section class="py-4 container">
+			<div class="row">
+				<div class="col-12">
+					<div class="d-flex justify-content-between align-items-center mb-4">
+						<h2 class="fw-light">注文管理</h2>
+						<div>
+							<span class="badge bg-primary fs-6 me-2">総注文数: <span th:text="${totalOrders}">235</span>件</span>
+						</div>
+					</div>
+
+					<!-- 統計情報カード -->
+					<div class="row mb-4">
+						<div class="col-md-3">
+							<div class="card text-center">
+								<div class="card-body">
+									<h5 class="card-title text-muted">レンタル中</h5>
+									<p class="display-6 fw-bold text-warning" th:text="${rentingOrders}">45</p>
+								</div>
+							</div>
+						</div>
+						<div class="col-md-3">
+							<div class="card text-center">
+								<div class="card-body">
+									<h5 class="card-title text-muted">返却待ち</h5>
+									<p class="display-6 fw-bold text-danger" th:text="${overdueOrders}">8</p>
+								</div>
+							</div>
+						</div>
+						<div class="col-md-3">
+							<div class="card text-center">
+								<div class="card-body">
+									<h5 class="card-title text-muted">返却済み</h5>
+									<p class="display-6 fw-bold text-success" th:text="${completedOrders}">182</p>
+								</div>
+							</div>
+						</div>
+						<div class="col-md-3">
+							<div class="card text-center">
+								<div class="card-body">
+									<h5 class="card-title text-muted">今月の売上</h5>
+									<p class="display-6 fw-bold text-info" th:text="'¥' + ${#numbers.formatInteger(monthlySales, 1, 'COMMA')}">¥1,250,000</p>
+								</div>
+							</div>
+						</div>
+					</div>
+
+					<!-- 検索フォーム -->
+					<div class="card mb-4">
+						<div class="card-body">
+							<form method="get" action="/admin/order">
+								<div class="row g-3">
+									<div class="col-md-3">
+										<input type="text" class="form-control" name="orderId" 
+											placeholder="注文IDで検索" th:value="${orderId}">
+									</div>
+									<div class="col-md-3">
+										<input type="text" class="form-control" name="userName" 
+											placeholder="ユーザー名で検索" th:value="${userName}">
+									</div>
+									<div class="col-md-2">
+										<select class="form-select" name="status">
+											<option value="">すべてのステータス</option>
+											<option value="renting" th:selected="${status == 'renting'}">レンタル中</option>
+											<option value="overdue" th:selected="${status == 'overdue'}">返却期限超過</option>
+											<option value="returned" th:selected="${status == 'returned'}">返却済み</option>
+											<option value="cancelled" th:selected="${status == 'cancelled'}">キャンセル</option>
+										</select>
+									</div>
+									<div class="col-md-2">
+										<input type="date" class="form-control" name="dateFrom" 
+											placeholder="開始日" th:value="${dateFrom}">
+									</div>
+									<div class="col-md-2">
+										<button type="submit" class="btn btn-secondary w-100">検索</button>
+									</div>
+								</div>
+							</form>
+						</div>
+					</div>
+
+					<!-- 注文テーブル -->
+					<div class="card">
+						<div class="card-body">
+							<div class="table-responsive">
+								<table class="table table-hover align-middle">
+									<thead class="table-light">
+										<tr>
+											<th>注文ID</th>
+											<th>ユーザー名</th>
+											<th>商品名</th>
+											<th>レンタル期間</th>
+											<th>料金</th>
+											<th>注文日</th>
+											<th>ステータス</th>
+											<th style="width: 150px;">操作</th>
+										</tr>
+									</thead>
+									<tbody>
+										<!-- ここからループ開始 -->
+										<tr th:each="order : ${orders}">
+											<td>
+												<span class="fw-bold" th:text="${order.id}">ORD001</span>
+											</td>
+											<td>
+												<div th:text="${order.userName}">山田 太郎</div>
+												<small class="text-muted" th:text="${order.userEmail}">yamada@example.com</small>
+											</td>
+											<td>
+												<div th:text="${order.productName}">Canon EOS R5</div>
+												<small class="text-muted">数量: <span th:text="${order.quantity}">1</span></small>
+											</td>
+											<td>
+												<div th:text="${#temporals.format(order.rentalStart, 'MM/dd')} + ' - ' + ${#temporals.format(order.rentalEnd, 'MM/dd')}">
+													12/01 - 12/05
+												</div>
+												<small class="text-muted"><span th:text="${order.days}">4</span>日間</small>
+											</td>
+											<td>
+												<span class="fw-bold" th:text="'¥' + ${#numbers.formatInteger(order.totalPrice, 1, 'COMMA')}">¥20,000</span>
+											</td>
+											<td th:text="${#temporals.format(order.orderDate, 'yyyy/MM/dd')}">2024/11/28</td>
+											<td>
+												<span class="badge" 
+													th:classappend="${order.status == 'renting'} ? 'bg-warning' : 
+														(${order.status == 'overdue'} ? 'bg-danger' : 
+														(${order.status == 'returned'} ? 'bg-success' : 'bg-secondary'))"
+													th:text="${order.status == 'renting'} ? 'レンタル中' : 
+														(${order.status == 'overdue'} ? '期限超過' : 
+														(${order.status == 'returned'} ? '返却済み' : 'キャンセル'))">
+													レンタル中
+												</span>
+											</td>
+											<td>
+												<div class="btn-group btn-group-sm" role="group">
+													<button type="button" class="btn btn-outline-primary" 
+														data-bs-toggle="modal" 
+														th:data-bs-target="'#orderDetailModal' + ${order.id}"
+														title="詳細">
+														<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-eye" viewBox="0 0 16 16">
+															<path d="M16 8s-3-5.5-8-5.5S0 8 0 8s3 5.5 8 5.5S16 8 16 8M1.173 8a13 13 0 0 1 1.66-2.043C4.12 4.668 5.88 3.5 8 3.5s3.879 1.168 5.168 2.457A13 13 0 0 1 14.828 8q-.086.13-.195.288c-.335.48-.83 1.12-1.465 1.755C11.879 11.332 10.119 12.5 8 12.5s-3.879-1.168-5.168-2.457A13 13 0 0 1 1.172 8z"/>
+															<path d="M8 5.5a2.5 2.5 0 1 0 0 5 2.5 2.5 0 0 0 0-5M4.5 8a3.5 3.5 0 1 1 7 0 3.5 3.5 0 0 1-7 0"/>
+														</svg>
+													</button>
+													<button type="button" class="btn btn-outline-success" 
+														th:if="${order.status == 'renting' or order.status == 'overdue'}"
+														th:onclick="'confirmReturn(\'' + ${order.id} + '\')'"
+														title="返却処理">
+														<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-check-circle" viewBox="0 0 16 16">
+															<path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14m0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16"/>
+															<path d="m10.97 4.97-.02.022-3.473 4.425-2.093-2.094a.75.75 0 0 0-1.06 1.06L6.97 11.03a.75.75 0 0 0 1.079-.02l3.992-4.99a.75.75 0 0 0-1.071-1.05"/>
+														</svg>
+													</button>
+													<a th:href="@{/admin/order/invoice/{id}(id=${order.id})}" 
+														class="btn btn-outline-info" 
+														target="_blank"
+														title="請求書">
+														<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-file-text" viewBox="0 0 16 16">
+															<path d="M5 4a.5.5 0 0 0 0 1h6a.5.5 0 0 0 0-1zm-.5 2.5A.5.5 0 0 1 5 6h6a.5.5 0 0 1 0 1H5a.5.5 0 0 1-.5-.5M5 8a.5.5 0 0 0 0 1h6a.5.5 0 0 0 0-1zm0 2a.5.5 0 0 0 0 1h3a.5.5 0 0 0 0-1z"/>
+															<path d="M2 2a2 2 0 0 1 2-2h8a2 2 0 0 1 2 2v12a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2zm10-1H4a1 1 0 0 0-1 1v12a1 1 0 0 0 1 1h8a1 1 0 0 0 1-1V2a1 1 0 0 0-1-1"/>
+														</svg>
+													</a>
+												</div>
+											</td>
+										</tr>
+										<!-- ここまでループ終了 -->
+									</tbody>
+								</table>
+							</div>
+						</div>
+					</div>
+
+					<!-- ページネーション -->
+					<nav aria-label="注文ページ切り替え" class="mt-4">
+						<ul class="pagination justify-content-center">
+							<li class="page-item" th:classappend="${orders.first} ? ' disabled'">
+								<a class="page-link" th:href="@{/admin/order(page=${orders.number - 1})}" tabindex="-1">前へ</a>
+							</li>
+
+							<li class="page-item" th:each="i : ${#numbers.sequence(0, orders.totalPages - 1)}"
+								th:classappend="${i} == ${orders.number} ? ' active'">
+								<a class="page-link" th:text="${i + 1}" th:href="@{/admin/order(page=${i})}">1</a>
+							</li>
+
+							<li class="page-item" th:classappend="${orders.last} ? ' disabled'">
+								<a class="page-link" th:href="@{/admin/order(page=${orders.number + 1})}">次へ</a>
+							</li>
+						</ul>
+					</nav>
+
+				</div>
+			</div>
+		</section>
+
+	</main>
+
+	<!-- 注文詳細モーダル (各注文ごとに生成) -->
+	<div th:each="order : ${orders}" class="modal fade" th:id="'orderDetailModal' + ${order.id}" tabindex="-1">
+		<div class="modal-dialog modal-lg">
+			<div class="modal-content">
+				<div class="modal-header">
+					<h5 class="modal-title">注文詳細 - <span th:text="${order.id}"></span></h5>
+					<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+				</div>
+				<div class="modal-body">
+					<div class="row mb-3">
+						<div class="col-md-6">
+							<h6 class="text-muted mb-3">ユーザー情報</h6>
+							<table class="table table-sm table-borderless">
+								<tr>
+									<th style="width: 120px;">氏名:</th>
+									<td th:text="${order.userName}">山田 太郎</td>
+								</tr>
+								<tr>
+									<th>メール:</th>
+									<td th:text="${order.userEmail}">yamada@example.com</td>
+								</tr>
+								<tr>
+									<th>電話番号:</th>
+									<td th:text="${order.userPhone}">090-1234-5678</td>
+								</tr>
+								<tr>
+									<th>住所:</th>
+									<td th:text="${order.userAddress}">東京都渋谷区1-2-3</td>
+								</tr>
+							</table>
+						</div>
+						<div class="col-md-6">
+							<h6 class="text-muted mb-3">注文情報</h6>
+							<table class="table table-sm table-borderless">
+								<tr>
+									<th style="width: 120px;">注文日:</th>
+									<td th:text="${#temporals.format(order.orderDate, 'yyyy年MM月dd日')}">2024年11月28日</td>
+								</tr>
+								<tr>
+									<th>レンタル期間:</th>
+									<td>
+										<span th:text="${#temporals.format(order.rentalStart, 'yyyy/MM/dd')}">2024/12/01</span>
+										～
+										<span th:text="${#temporals.format(order.rentalEnd, 'yyyy/MM/dd')}">2024/12/05</span>
+										(<span th:text="${order.days}">4</span>日間)
+									</td>
+								</tr>
+								<tr>
+									<th>ステータス:</th>
+									<td>
+										<span class="badge" 
+											th:classappend="${order.status == 'renting'} ? 'bg-warning' : 
+												(${order.status == 'overdue'} ? 'bg-danger' : 
+												(${order.status == 'returned'} ? 'bg-success' : 'bg-secondary'))"
+											th:text="${order.status == 'renting'} ? 'レンタル中' : 
+												(${order.status == 'overdue'} ? '期限超過' : 
+												(${order.status == 'returned'} ? '返却済み' : 'キャンセル'))">
+										</span>
+									</td>
+								</tr>
+							</table>
+						</div>
+					</div>
+
+					<h6 class="text-muted mb-3">商品情報</h6>
+					<table class="table table-bordered">
+						<thead class="table-light">
+							<tr>
+								<th>商品名</th>
+								<th>カテゴリ</th>
+								<th style="width: 100px;">数量</th>
+								<th style="width: 120px;">単価/日</th>
+								<th style="width: 120px;">小計</th>
+							</tr>
+						</thead>
+						<tbody>
+							<tr>
+								<td th:text="${order.productName}">Canon EOS R5</td>
+								<td th:text="${order.productCategory}">カメラ</td>
+								<td th:text="${order.quantity}">1</td>
+								<td th:text="'¥' + ${#numbers.formatInteger(order.pricePerDay, 1, 'COMMA')}">¥5,000</td>
+								<td th:text="'¥' + ${#numbers.formatInteger(order.totalPrice, 1, 'COMMA')}">¥20,000</td>
+							</tr>
+						</tbody>
+						<tfoot>
+							<tr>
+								<td colspan="4" class="text-end fw-bold">合計金額:</td>
+								<td class="fw-bold text-primary fs-5" th:text="'¥' + ${#numbers.formatInteger(order.totalPrice, 1, 'COMMA')}">¥20,000</td>
+							</tr>
+						</tfoot>
+					</table>
+
+					<div th:if="${order.notes != null and order.notes != ''}" class="alert alert-info">
+						<strong>備考:</strong> <span th:text="${order.notes}"></span>
+					</div>
+				</div>
+				<div class="modal-footer">
+					<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">閉じる</button>
+					<a th:href="@{/admin/order/invoice/{id}(id=${order.id})}" 
+						class="btn btn-info" 
+						target="_blank">
+						請求書を表示
+					</a>
+					<button type="button" class="btn btn-success" 
+						th:if="${order.status == 'renting' or order.status == 'overdue'}"
+						th:onclick="'confirmReturn(\'' + ${order.id} + '\')'">
+						返却処理
+					</button>
+				</div>
+			</div>
+		</div>
+	</div>
+
+	<footer class="text-body-secondary py-5">
+		<div class="container">
+			<p class="float-end mb-1">
+				<a href="#">Back to top</a>
+			</p>
+			<p class="mb-1">&copy; 株式会社 Music Life Agency</p>
+		</div>
+	</footer>
+	
+	<script src="/js/bootstrap.bundle.min.js"></script>
+	<script>
+		function confirmReturn(orderId) {
+			if (confirm('注文ID: ' + orderId + ' の返却処理を行いますか?')) {
+				window.location.href = '/admin/order/return/' + orderId;
+			}
+		}
+	</script>
+
+</body>
+
+</html>
