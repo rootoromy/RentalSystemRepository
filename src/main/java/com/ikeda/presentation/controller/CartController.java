@@ -48,5 +48,14 @@ public class CartController {
         model.addAttribute("cart", cart);
         return "cart"; // cart.html
     }
+    
+    @GetMapping("/delete/{id}")
+    public String itemDeletedCart(@PathVariable("id") int id, HttpSession session, Model model) {
+    	List<DvdItem> cart = (List<DvdItem>) session.getAttribute("cart");
+    	cart.removeIf(DvdItem -> DvdItem.getId() == (id));
+    	session.setAttribute("cart", cart);
+    	model.addAttribute("cart", cart);
+    	return "cart";
+    }
 
 }

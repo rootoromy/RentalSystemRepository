@@ -10,7 +10,6 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
-import com.ikeda.LoginService;
 import com.ikeda.data.ItemData;
 import com.ikeda.entity.DvdItem;
 import com.ikeda.presentation.form.MemberForm;
@@ -20,8 +19,8 @@ import jakarta.servlet.http.HttpSession;
 
 @Controller
 public class RentalSystemController {
-	@Autowired
-	private LoginService loginService;  // インスタンスを注入
+//	@Autowired
+//	private LoginService loginService;  // インスタンスを注入
 	
 	@GetMapping(value = "/home")
 	public String toHome( /* HttpSession session, Model model */ ) {
