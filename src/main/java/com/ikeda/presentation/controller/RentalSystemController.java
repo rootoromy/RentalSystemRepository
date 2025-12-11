@@ -21,7 +21,11 @@ import org.springframework.web.server.ResponseStatusException;
 import com.ikeda.data.ItemData;
 import com.ikeda.entity.DvdItem;
 import com.ikeda.presentation.form.MemberForm;
-import com.ikeda.repository.DvdItemRepository;  
+import com.ikeda.repository.DvdItemRepository;
+import com.ikeda.service.LoginService;
+
+import jakarta.servlet.http.HttpSession;
+
 @Controller
 public class RentalSystemController {
 	@Autowired
@@ -65,7 +69,7 @@ public class RentalSystemController {
 		return "login"; // templates/login.html を返す
 	}
 
-/*	@PostMapping("/login")
+/*	@PostMapping("/login")//LoginController.javaに移植してます
 	public String doLogin(
 			@RequestParam String email,
 			@RequestParam String password,
@@ -80,7 +84,7 @@ public class RentalSystemController {
 			return "login";
 		}
 
-	}*/
+	} */
 	@Autowired
 	private DvdItemRepository dvdItemRepository;
     /*遷移先が二つになるのでコメントアウト
