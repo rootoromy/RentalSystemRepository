@@ -53,7 +53,7 @@ public class MemberService {
         member.setAddress(formUser.getAddress());
 
         return memberRepository.save(member);
-	 
+    }
 //    @Autowired
 //    private MemberRepository memberRepository;
 

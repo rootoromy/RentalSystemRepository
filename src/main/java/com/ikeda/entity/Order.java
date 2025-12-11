@@ -1,5 +1,7 @@
 package com.ikeda.entity;
 
+import java.time.LocalDateTime; // 【重要】インポートを追加
+
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -22,8 +24,33 @@ public class Order {
     private Member member;
 
     // 注文日の例
-   // private LocalDateTime orderDate;
+    private LocalDateTime orderDate;// 注文日を有効化
 
-    // --- getter / setter ---
+// --- getter / setter ---
     
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
+
+    public Member getMember() {
+        return member;
+    }
+
+    public void setMember(Member member) {
+        this.member = member;
+    }
+
+    // --- 【追加箇所: orderDate の Getter/Setter】 ---
+    public LocalDateTime getOrderDate() {
+        return orderDate;
+    }
+
+    public void setOrderDate(LocalDateTime orderDate) {
+        this.orderDate = orderDate;
+    }
+    // ----------------------------------------------------
 }
