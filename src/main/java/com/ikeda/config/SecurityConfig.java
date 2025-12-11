@@ -39,6 +39,14 @@ public class SecurityConfig {
         };
     }
     
+    // -------------------------
+    // 管理者用UserDetailService
+    // -------------------------
+    @Bean
+    public UserDetailService userDetailService() {
+    	
+    }
+    
     // ----------------------------
     // 利用者用SecurityFilterChain
     // ----------------------------

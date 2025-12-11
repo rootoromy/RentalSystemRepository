@@ -1,35 +1,21 @@
 package com.ikeda.presentation.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-
-import com.ikeda.LoginService;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.server.ResponseStatusException;
 
-import com.ikeda.data.ItemData;
 import com.ikeda.entity.DvdItem;
 import com.ikeda.presentation.form.MemberForm;
 import com.ikeda.repository.DvdItemRepository;
-import com.ikeda.service.LoginService;
-
-import jakarta.servlet.http.HttpSession;
 
 @Controller
 public class RentalSystemController {
 	@Autowired
-	private LoginService loginService;  // インスタンスを注入
+//	private LoginService loginService;  // インスタンスを注入
 
 	
 	@GetMapping(value = "/gohome")//二つあるので仮のgoに変更してます
