@@ -1,6 +1,5 @@
 package com.ikeda.presentation.controller;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -14,7 +13,7 @@ import com.ikeda.presentation.form.LoginForm;
 @Controller
 public class LoginController {
 
-	@Autowired
+//	@Autowired
 //	private LoginService loginService;  // インスタンスを注入
 
     // GET /login → ログイン画面表示
