@@ -57,7 +57,6 @@
 											<th>商品ID</th>
 											<th>商品名</th>
 											<th>在庫</th>
-											<th>ステータス</th>
 											<th style="width: 200px;">操作</th>
 										</tr>
 									</thead>
@@ -74,13 +73,7 @@
 											<td th:text="${product.title}">ざえもん</td>
 											
 											<td th:text="${product.stock}">3</td>
-											<td>
-												<span class="badge" 
-													th:classappend="${product.status == 'available'} ? 'bg-success' : (${product.status == 'rented'} ? 'bg-warning' : 'bg-danger')"
-													th:text="${product.status == 'available'} ? '在庫あり' : (${product.status == 'rented'} ? 'レンタル中' : 'メンテナンス中')">
-													在庫あり
-												</span>
-											</td>
+								
 											<td>
 												<div class="btn-group btn-group-sm" role="group">
 										
