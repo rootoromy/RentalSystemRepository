@@ -22,6 +22,15 @@ public class DvdItem {
     
     @Column(name = "description")
     private String description;
+    
+ // --- 【修正・追加箇所 1】 料金フィールドを追加 ---
+    @Column(name = "price_per_day") // DBのカラム名に合わせて設定（仮）
+    private Integer pricePerDay; 
+    // ------------------------------------------------
+    
+ // --- 【追加箇所】 ---
+    private Integer stock; // HTMLに合わせて在庫数を追加
+    // ----------------------
 
     public Integer getId() {
         return id;
@@ -50,4 +59,21 @@ public class DvdItem {
     public void setDescription(String description) {
         this.description = description;
     }
+    
+    public Integer getPricePerDay() {
+        return pricePerDay;
+    }
+
+    public void setPricePerDay(Integer pricePerDay) {
+        this.pricePerDay = pricePerDay;
+    }
+    
+ // --- 【追加箇所: stock の Getter/Setter】 ---
+    public Integer getStock() {
+        return stock;
+    }
+    public void setStock(Integer stock) {
+        this.stock = stock;
+    }
+    // ----------------------------------------------
 }
