@@ -56,7 +56,9 @@
 											<th style="width: 80px;">画像</th>
 											<th>商品ID</th>
 											<th>商品名</th>
-											<th>在庫総数</th>
+											<th>店内在庫</th>
+											<th>貸出在庫</th>
+											<th>在庫総数(店内在庫＋貸出在庫)</th>
 											<th style="width: 200px;">操作</th>
 										</tr>
 									</thead>
@@ -64,15 +66,17 @@
 										<!-- ここからループ開始 -->
 										<tr th:each="p : ${products.content}">
 											<td>
-												<img th:src="@{/img/{file}(file=${p.imageFileName})}" 
+												<img th:src="@{/img/{f}(f=${p.imageFileName})}" 
 													th:alt="${p.title}" 
 													class="img-thumbnail" 
 													style="width: 60px; height: 60px; object-fit: cover;">
+													
 											</td>
-											<td th:text="${p.id}">P001</td>
-											<td th:text="${p.title}">ざえもん</td>
-											
-											<td th:text="${p.stock}">3</td>
+											<td th:text="${p.id}"></td>
+											<td th:text="${p.title}"></td>
+											<td th:text="${p.notRentedStock}"></td>
+											<td th:text="${p.rentedStock}"></td>
+											<td th:text="${p.stock}"></td>
 								
 											<td>
 												<div class="btn-group btn-group-sm" role="group">
@@ -83,6 +87,8 @@
 															<path d="M12.146.146a.5.5 0 0 1 .708 0l3 3a.5.5 0 0 1 0 .708l-10 10a.5.5 0 0 1-.168.11l-5 2a.5.5 0 0 1-.65-.65l2-5a.5.5 0 0 1 .11-.168zM11.207 2.5 13.5 4.793 14.793 3.5 12.5 1.207zm1.586 3L10.5 3.207 4 9.707V10h.5a.5.5 0 0 1 .5.5v.5h.5a.5.5 0 0 1 .5.5v.5h.293zm-9.761 5.175-.106.106-1.528 3.821 3.821-1.528.106-.106A.5.5 0 0 1 5 12.5V12h-.5a.5.5 0 0 1-.5-.5V11h-.5a.5.5 0 0 1-.468-.325"/>
 														</svg>
 													</a>
+
+													
 													<a th:href="@{/admin/product-delete-confirm/{id}(id=${p.id})}" 
 														class="btn btn-outline-danger" title="削除">
 														<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-trash" viewBox="0 0 16 16">
